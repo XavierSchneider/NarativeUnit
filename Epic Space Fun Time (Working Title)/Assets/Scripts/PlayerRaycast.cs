@@ -10,6 +10,7 @@ public class PlayerRaycast : MonoBehaviour {
     public GameObject particle2;
     public GameObject escapePod3;
     public GameObject particle3;
+    public GameObject moveableWall;
 
     public float podSpeed = 4.0f;
 
@@ -42,6 +43,10 @@ public class PlayerRaycast : MonoBehaviour {
             {
                 Pod3();
             }
+            if (Input.GetMouseButton(0) & hit.collider.tag == "Button4")
+            {
+                Wall();
+            }
         }
 
 	}
@@ -64,5 +69,10 @@ public class PlayerRaycast : MonoBehaviour {
         Debug.Log("Button 3 pressed");
         escapePod3.GetComponent<Rigidbody>().AddForce(escapePod1.transform.forward * -podSpeed);
         particle3.SetActive(true);
+    }
+    private void Wall()
+    {
+        Debug.Log("Button 4 pressed");
+        moveableWall.SetActive(false);
     }
 }
