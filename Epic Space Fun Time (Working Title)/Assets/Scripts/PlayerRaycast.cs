@@ -66,6 +66,7 @@ public class PlayerRaycast : MonoBehaviour {
 
     private void Pod3()
     {
+        Time.timeScale = Mathf.Lerp(1f, 0.3f, 0.6f);
         Debug.Log("Button 3 pressed");
         escapePod3.GetComponent<Rigidbody>().AddForce(escapePod1.transform.forward * -podSpeed);
         particle3.SetActive(true);
