@@ -11,9 +11,12 @@ public class PlayerRaycast : MonoBehaviour {
     public GameObject escapePod3;
     public GameObject particle3;
     public GameObject moveableWall;
+    public List<AudioSource> soundList;
 
     public float podSpeed = 4.0f;
 
+    private float endTimer;
+    private bool endState = false;  
 
     private void Start()
     {
@@ -31,22 +34,30 @@ public class PlayerRaycast : MonoBehaviour {
 
         if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, distanceOfRay))
         {
-            if (Input.GetMouseButton(0) & hit.collider.tag == "Button1")
+            if (Input.GetMouseButtonUp(0) & hit.collider.tag == "Button1")
             {
                 Pod1();
+                hit.collider.GetComponent<MeshRenderer>().material.color = Color.yellow;
             }
-            if (Input.GetMouseButton(0) & hit.collider.tag == "Button2")
+            if (Input.GetMouseButtonUp(0) & hit.collider.tag == "Button2")
             {
                 Pod2();
+                hit.collider.GetComponent<MeshRenderer>().material.color = Color.yellow;
             }
-            if (Input.GetMouseButton(0) & hit.collider.tag == "Button3")
+            if (Input.GetMouseButtonUp(0) & hit.collider.tag == "Button3")
             {
                 Pod3();
+                hit.collider.GetComponent<MeshRenderer>().material.color = Color.yellow;
             }
-            if (Input.GetMouseButton(0) & hit.collider.tag == "Button4")
+            if (Input.GetMouseButtonUp(0) & hit.collider.tag == "Button4")
             {
                 Wall();
+                hit.collider.GetComponent<MeshRenderer>().material.color = Color.yellow;
             }
+        }
+        if (endState == true)
+        {
+            EndGame();
         }
 
 	}
@@ -56,6 +67,7 @@ public class PlayerRaycast : MonoBehaviour {
         Debug.Log("Button 1 pressed");
         escapePod1.GetComponent<Rigidbody>().AddForce(escapePod1.transform.forward * podSpeed);
         particle1.SetActive(true);
+        
     }
     private void Pod2()
     {
@@ -66,14 +78,32 @@ public class PlayerRaycast : MonoBehaviour {
 
     private void Pod3()
     {
-        Time.timeScale = Mathf.Lerp(1f, 0.3f, 0.6f);
         Debug.Log("Button 3 pressed");
         escapePod3.GetComponent<Rigidbody>().AddForce(escapePod1.transform.forward * -podSpeed);
         particle3.SetActive(true);
+        endState = true;
+        
     }
     private void Wall()
     {
         Debug.Log("Button 4 pressed");
         moveableWall.SetActive(false);
     }
+
+    private void EndGame()
+    {
+        endTimer += Time.deltaTime;
+        Debug.Log(endTimer);
+        foreach (var audio in soundList)
+        {
+            audio.volume -= 0.5f * Time.deltaTime;
+            //print(audio.volume + "goingin");
+        }
+        if (endTimer >= 5)
+        {
+            Application.Quit();
+            Debug.Log("Game over");
+        }
+    }
+
 }
